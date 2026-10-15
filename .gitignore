@@ -1,0 +1,36 @@
+# Generated pipeline state: regenerate locally, never version it.
+**/data/
+**/checkpoints/
+**/logs/
+**/ivy/
+**/spark-warehouse/
+**/metastore_db/
+shop-data-pipeline-stage6-addon/config/
+
+# Local credentials and environment
+.env
+.env.*
+!.env.example
+**/secrets.toml
+*.pem
+*.key
+
+# Python and editor caches
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.idea/
+.vscode/
+
+# Downloaded packages and OS files
+*.zip
+*.log
+.DS_Store
+Thumbs.db
+Desktop.ini

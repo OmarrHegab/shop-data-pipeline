@@ -1,0 +1,23 @@
+# Paths resolve from stage 1's compose.yaml, the first Compose file.
+services:
+  dashboard:
+    build:
+      context: ../shop-data-pipeline-stage7-addon/dashboard
+    ports:
+      - "127.0.0.1:8502:8501"
+    environment:
+      PGHOST: postgres
+      PGPORT: "5432"
+      PGDATABASE: shop_analytics
+      PGUSER: shop
+      PGPASSWORD: shop_local_dev
+      PGCONNECT_TIMEOUT: "10"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8501/_stcore/health', timeout=5)"]
+      interval: 10s
+      timeout: 6s
+      start_period: 30s
+      retries: 12

@@ -1,0 +1,38 @@
+# All relative paths resolve from stage 1's compose.yaml.
+services:
+  postgres:
+    image: postgres:17-bookworm
+    environment:
+      POSTGRES_DB: shop_analytics
+      POSTGRES_USER: shop
+      POSTGRES_PASSWORD: shop_local_dev
+    volumes:
+      - analytics-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U shop -d shop_analytics"]
+      interval: 5s
+      timeout: 5s
+      start_period: 20s
+      retries: 20
+
+  warehouse:
+    profiles: ["tools"]
+    build:
+      context: ../shop-data-pipeline-stage5-addon/loader
+    environment:
+      PGHOST: postgres
+      PGPORT: "5432"
+      PGDATABASE: shop_analytics
+      PGUSER: shop
+      PGPASSWORD: shop_local_dev
+      PGCONNECT_TIMEOUT: "10"
+      GOLD_ROOT: /opt/project/data/gold
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - ./data:/opt/project/data:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  analytics-postgres-data:

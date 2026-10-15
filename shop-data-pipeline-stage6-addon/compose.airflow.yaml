@@ -1,0 +1,65 @@
+# Merge last, after stages 1-5. Paths resolve from stage 1's compose.yaml.
+services:
+  # Retain the Windows port fix: analytics is reached inside Docker.
+  postgres:
+    ports: !reset []
+
+  spark:
+    volumes:
+      - ../shop-data-pipeline-stage2-addon/spark:/opt/project/spark:ro
+
+  airflow-db:
+    image: postgres:17-bookworm
+    environment:
+      POSTGRES_DB: airflow
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow_local_dev
+    volumes:
+      - airflow-metadata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U airflow -d airflow"]
+      interval: 5s
+      timeout: 5s
+      start_period: 20s
+      retries: 20
+
+  airflow:
+    build:
+      context: ../shop-data-pipeline-stage6-addon/airflow
+    user: "0:0"
+    command: ["standalone"]
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
+      AIRFLOW__CORE__PARALLELISM: "1"
+      AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_USERS: omar:admin
+      AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_PASSWORDS_FILE: /opt/airflow/auth/passwords.json
+      AIRFLOW__CORE__EXECUTION_API_SERVER_URL: http://airflow:8080/execution/
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow_local_dev@airflow-db:5432/airflow
+      AIRFLOW__API_AUTH__JWT_SECRET: shop-airflow-local-dev-jwt-secret-change-for-other-environments
+      AIRFLOW__API__SECRET_KEY: shop-airflow-local-dev-api-secret
+      AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: "true"
+      SHOP_JOB_CONFIG: /opt/project/job-config/jobs.json
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ../shop-data-pipeline-stage6-addon/dags:/opt/airflow/dags:ro
+      - ../shop-data-pipeline-stage6-addon/config:/opt/project/job-config:ro
+      - airflow-logs:/opt/airflow/logs
+      - airflow-auth:/opt/airflow/auth
+    depends_on:
+      airflow-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "/opt/project/airflow/healthcheck.py"]
+      interval: 15s
+      timeout: 10s
+      start_period: 120s
+      retries: 20
+
+volumes:
+  airflow-metadata:
+  airflow-logs:
+  airflow-auth:

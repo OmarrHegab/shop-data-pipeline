@@ -1,0 +1,28 @@
+# Paths resolve from stage 1's compose.yaml, the FIRST Compose file.
+services:
+  gold:
+    image: apache/spark:3.5.8-scala2.12-java17-python3-r-ubuntu
+    profiles: ["tools"]
+    user: "185:185"
+    environment:
+      HOME: /tmp
+      PYSPARK_PYTHON: python3
+      PYTHONUNBUFFERED: "1"
+      SPARK_LOCAL_IP: 127.0.0.1
+      SILVER_ROOT: /opt/project/data/silver
+      GOLD_ROOT: /opt/project/data/gold
+    entrypoint:
+      - /opt/spark/bin/spark-submit
+      - --master
+      - local[2]
+      - --driver-memory
+      - 1g
+      - --conf
+      - spark.sql.shuffle.partitions=2
+    command: ["/opt/project/gold-jobs/silver_to_gold.py"]
+    volumes:
+      - ../shop-data-pipeline-stage4-addon/spark:/opt/project/gold-jobs:ro
+      - ./data:/opt/project/data
+    depends_on:
+      spark-storage-init:
+        condition: service_completed_successfully

@@ -1,0 +1,3 @@
+config/*.json
+airflow/__pycache__/
+dags/__pycache__/

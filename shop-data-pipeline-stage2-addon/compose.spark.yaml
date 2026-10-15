@@ -1,0 +1,57 @@
+# Use together with your existing file:
+# docker compose -f compose.yaml -f compose.spark.yaml run --rm spark
+
+services:
+  spark-storage-init:
+    image: apache/spark:3.5.8-scala2.12-java17-python3-r-ubuntu
+    profiles: ["tools"]
+    user: "0:0"
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >-
+        mkdir -p /opt/project/data/bronze/orders /opt/project/checkpoints/bronze-orders /opt/project/ivy &&
+        chown -R 185:185 /opt/project/data /opt/project/checkpoints /opt/project/ivy
+    volumes:
+      - ./data:/opt/project/data
+      - ./checkpoints:/opt/project/checkpoints
+      - spark-ivy:/opt/project/ivy
+
+  spark:
+    image: apache/spark:3.5.8-scala2.12-java17-python3-r-ubuntu
+    profiles: ["tools"]
+    user: "185:185"
+    environment:
+      HOME: /tmp
+      PYSPARK_PYTHON: python3
+      PYTHONUNBUFFERED: "1"
+      SPARK_LOCAL_IP: 127.0.0.1
+      KAFKA_BOOTSTRAP_SERVERS: kafka:19092
+      KAFKA_TOPIC: orders
+      BRONZE_PATH: /opt/project/data/bronze/orders
+      CHECKPOINT_PATH: /opt/project/checkpoints/bronze-orders
+    entrypoint:
+      - /opt/spark/bin/spark-submit
+      - --master
+      - local[2]
+      - --driver-memory
+      - 1g
+      - --conf
+      - spark.sql.shuffle.partitions=2
+      - --conf
+      - spark.jars.ivy=/opt/project/ivy
+      - --packages
+      - org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.8
+    command: ["/opt/project/spark/kafka_to_bronze.py"]
+    volumes:
+      - ../shop-data-pipeline-stage2-addon/spark:/opt/project/spark:ro
+      - ./data:/opt/project/data
+      - ./checkpoints:/opt/project/checkpoints
+      - spark-ivy:/opt/project/ivy
+    depends_on:
+      kafka:
+        condition: service_healthy
+      spark-storage-init:
+        condition: service_completed_successfully
+
+volumes:
+  spark-ivy:

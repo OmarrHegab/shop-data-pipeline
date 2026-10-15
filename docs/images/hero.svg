@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="420" viewBox="0 0 1280 420" role="img" aria-labelledby="title desc">
+<title id="title">Shop Data Pipeline</title>
+<desc id="desc">From order events to business insight. Kafka, Spark, Airflow and PostgreSQL analytics.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0B172A"/><stop offset="1" stop-color="#123951"/></linearGradient>
+  <linearGradient id="accent"><stop stop-color="#2DD4BF"/><stop offset="1" stop-color="#60A5FA"/></linearGradient>
+</defs>
+<rect width="1280" height="420" rx="24" fill="url(#bg)"/>
+<path d="M0 340H1280 M0 280H1280 M0 220H1280 M0 160H1280 M0 100H1280 M80 0V420 M160 0V420 M240 0V420 M320 0V420 M400 0V420 M480 0V420 M560 0V420 M640 0V420 M720 0V420 M800 0V420 M880 0V420 M960 0V420 M1040 0V420 M1120 0V420 M1200 0V420" stroke="#fff" opacity=".035"/>
+<rect x="58" y="58" width="236" height="30" rx="15" fill="#184658"/>
+<circle cx="77" cy="73" r="4" fill="#2DD4BF"/>
+<text x="92" y="78" fill="#A7F3D0" font-family="DejaVu Sans,Arial,sans-serif" font-size="12" letter-spacing="2">DATA ENGINEERING</text>
+<text x="58" y="160" fill="#F8FAFC" font-family="DejaVu Sans,Arial,sans-serif" font-weight="700" font-size="58" letter-spacing="-2">Shop Data Pipeline</text>
+<text x="60" y="207" fill="#BED0DE" font-family="DejaVu Sans,Arial,sans-serif" font-size="24">From order events to business insight.</text>
+<text x="60" y="251" fill="#7FA7BB" font-family="DejaVu Sans,Arial,sans-serif" font-size="16">Event ingestion / validated data / scheduled analytics</text>
+<rect x="60" y="307" width="134" height="40" rx="8" fill="#203C50" stroke="#37546A"/>
+<rect x="208" y="307" width="134" height="40" rx="8" fill="#203C50" stroke="#37546A"/>
+<rect x="356" y="307" width="134" height="40" rx="8" fill="#203C50" stroke="#37546A"/>
+<text x="127" y="332" text-anchor="middle" fill="#E6B787" font-family="DejaVu Sans,Arial,sans-serif" font-size="14">BRONZE</text>
+<text x="275" y="332" text-anchor="middle" fill="#CBD5E1" font-family="DejaVu Sans,Arial,sans-serif" font-size="14">SILVER</text>
+<text x="423" y="332" text-anchor="middle" fill="#FDE68A" font-family="DejaVu Sans,Arial,sans-serif" font-size="14">GOLD</text>
+<g transform="translate(860 74)">
+ <rect width="345" height="270" rx="20" fill="#0C2134" stroke="#2A5268"/>
+ <text x="26" y="40" fill="#84A7BB" font-family="DejaVu Sans,Arial,sans-serif" font-size="12" letter-spacing="2">ORDER EVENTS → ANALYTICS</text>
+ <path d="M32 211H309" stroke="#28445A"/>
+ <rect x="35" y="157" width="40" height="54" rx="5" fill="#1D6675"/>
+ <rect x="101" y="125" width="40" height="86" rx="5" fill="#208A90"/>
+ <rect x="167" y="102" width="40" height="109" rx="5" fill="#2CB5B0"/>
+ <rect x="233" y="75" width="40" height="136" rx="5" fill="url(#accent)"/>
+ <path d="M54 136L121 103L187 80L253 55" stroke="#9FE7E4" stroke-width="3" fill="none"/>
+ <g fill="#9FE7E4"><circle cx="54" cy="136" r="4"/><circle cx="121" cy="103" r="4"/><circle cx="187" cy="80" r="4"/><circle cx="253" cy="55" r="4"/></g>
+ <text x="26" y="245" fill="#668B9F" font-family="DejaVu Sans,Arial,sans-serif" font-size="11">ILLUSTRATIVE · LOCAL PORTFOLIO PROJECT</text>
+</g>
+<rect x="0" y="406" width="1280" height="14" fill="url(#accent)"/>
+</svg>
